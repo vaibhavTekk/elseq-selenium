@@ -24,7 +24,7 @@ date_field = driver.find_element(By.XPATH, '//*[@id="jDate"]/span/input')
 date_field.clear()
 date_field.send_keys(Keys.CONTROL + 'a')
 date_field.send_keys(Keys.BACKSPACE)
-date_field.send_keys("20/12/2024")
+date_field.send_keys("23/12/2024")
 date_field.send_keys(Keys.TAB)
 dest.click()
 
