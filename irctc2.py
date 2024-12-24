@@ -32,7 +32,7 @@ for inp in inputs:
             inp.send_keys(Keys.CONTROL + 'a')
             inp.send_keys(Keys.BACKSPACE)
             inp.send_keys(userinp)
-            inp.send_keys(Keys.TAB)
+            inp.send_keys(Keys.ESCAPE)
         if (inp.aria_role == 'checkbox'):
             print(inp.is_selected())
             userinp = input('Y/N:')
@@ -41,9 +41,11 @@ for inp in inputs:
             elif userinp == 'N' and inp.is_selected():
                 parent.click()
         
-# form = driver.find_element(By.XPATH,'//*[@id="divMain"]/div/app-main-page/div/div/div[1]/div[1]/div[1]/app-jp-input/div/form')
-# form.submit()
+buttons = driver.find_elements(By.XPATH, '//button')
+for btn in buttons:
+    if btn.get_attribute('label') == 'Find Trains':
+        btn.click()
 
 #MGR CHENNAI CTL - MAS (CHENNAI)
 #KSR BENGALURU - SBC
-#24/12/2024
+#26/12/2024
