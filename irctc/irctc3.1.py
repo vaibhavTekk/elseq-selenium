@@ -12,7 +12,9 @@ chrome_options.add_experimental_option("detach", True)
 driver = webdriver.Chrome(options=chrome_options)
 
 driver.get("https://www.irctc.co.in/nget/train-search")
-#driver.get("https://www.kickstarter.com/signup")
+# driver.get("https://www.kickstarter.com/signup")
+# driver.get("https://youtube.com")
+
 
 elem = WebDriverWait(driver, 30).until(
     EC.presence_of_element_located((By.XPATH, "//input"))  # This is a dummy element
