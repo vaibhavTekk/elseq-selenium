@@ -1,0 +1,1 @@
+this directory will contain the scripts for locally running an LLM to generate test scripts for the scraped sites. There are plans to allow for cloud based hosting using the openAI API as well, but that is, as of yet, undecided. 
