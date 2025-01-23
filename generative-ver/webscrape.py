@@ -3,7 +3,7 @@
     generates summaries of a given site using a dataframe with relevant parameters 
     of all interactive webelements. scrape_site() returns a dataframe with the
     relevant parameters. generate_summary() returns a summary of the site.
-    generate_testcase(id) returns a testcase for the given id.
+    generate_testcases() creates a script of testcases based on the summary.
 """
 
 def scrape_site(url):
@@ -86,7 +86,7 @@ def generate_summary(df):
     messages = [
         {
             'role': 'user',
-            'content': f"Generate a summary of the website using the given dataframe, which includes relevant parameters of all interactive webelements such as element type, attributes, and actions. The summary should be clear and comprehensive, providing a detailed description of the webpage's structure and functionality, suitable for generating appropriate test cases for the webelements. {df.to_string()}",
+            'content': f"Generate a summary of the website using the given dataframe, which includes relevant parameters of all interactive webelements such as element type, attributes, and actions. The summary should be clear and comprehensive, providing a detailed description of the webpage's structure and functionality, suitable for generating appropriate test cases for the webelements. Assume this response will directly be fed to code generation models that generate test cases accordingly. When mentionining potential test cases, mention the dataframe index of the relevant elements, to help with automatically generating testcases. {df.to_string()}",
         },
     ]
 
@@ -96,4 +96,47 @@ def generate_summary(df):
     # Print the response
     return response['message']['content']
 
-print(generate_summary(scrape_site('http://ec2-52-32-108-4.us-west-2.compute.amazonaws.com:8082/')))
+
+def generate_testcases(summary, df):
+    """Generates a test script that includes test cases for the interactive elements 
+    on the webpage based on the given summary.
+
+    Args:
+        summary (str): An AI generated summary of the website
+        df (DataFrame): A Pandas DataFrame containing the relevant parameters of all interactive webelements.
+    
+    Returns:
+        str: A test script that includes test cases for the interactive elements on the webpage.
+    """
+    
+    # from ollama import Client
+    # client = Client()
+    # response = client.create(
+    #     'model' : 'codegen',
+    #     'task' : 'testcase_generation',
+    #     'from_': 'llama3.2',
+    #     'system': 'You are a code generator that reads a given summary of a website and generates a python->selenium script that tests the interactive elements on the webpage.',
+    #     'stream': False
+    # )
+    
+    # print(response.status)
+    # print("Model generated, generating script...")
+    
+    from ollama import chat
+    messages = [
+        {
+            'role': 'user',
+            'content': f"Generate a python->selenium test script for a website that has been summarized below. Summary: {summary} Dataframe: {df.to_string()}",
+        },
+    ]
+    response = chat('llama3.2', messages=messages)
+    return response['message']['content']
+
+print("Scraping site...", end = "")
+df = scrape_site("http://ec2-52-32-108-4.us-west-2.compute.amazonaws.com:8082/")
+print("Done!\n-----\n")
+print("Generating summary and test script...\n")
+summary = generate_summary(df)
+print(summary)
+test_script = generate_testcases(summary, df)
+print(test_script)
